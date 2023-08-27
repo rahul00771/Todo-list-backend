@@ -1,12 +1,13 @@
 import mongoose from 'mongoose';
 
-const todosSchema = mongoose.Schema({
+const todoSchema = new mongoose.Schema({
     task:{
         type: String,
         required: true
     },
     priority:{
-        type: String
+        type: String,
+        default: "low"
     },
     isCompleted:{
         type: Boolean,
@@ -14,4 +15,6 @@ const todosSchema = mongoose.Schema({
     }
 });
 
-export default todosSchema;
+const Todos = mongoose.model('Todos', todoSchema);
+
+export default Todos;

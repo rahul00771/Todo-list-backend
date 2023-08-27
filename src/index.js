@@ -1,6 +1,7 @@
 
 import express from 'express';
 import mongoose from 'mongoose';
+import router from './routers/routes.js';
 
 let todos = [];
 
@@ -30,7 +31,8 @@ app.use(express.json());
 
 //routings
 
-//-------------TODO---- use the router here after importing-------------------//
+//here '/todos' is the prefix endpoint, means /:id will be considered as /todos/:id
+app.use('/todos', router);
 
 
 //starting the server

@@ -1,68 +1,110 @@
 
 import express from 'express';
+import Todos from '../model/todos.js';
 
 const router = express.Router();
 
+//post request -> save()
+router.post('/', async (req, res) => {
 
-//--------------TODO : import schema and then replace todos with schema--------------------//
-
-let todos = [];
-
-//posting the new todo
-router.post('/todos/', (req, res)=>{
-    const newTodo = req.body;
-    todos.push(newTodo);
-});
-
-//retreiving the todos
-router.get('/todos/', (req, res)=>{
-    res.json(todos);
-});
-
-router.get('/todos/:id', (req, res)=>{
-    const todoId = req.params.id;
-    const todoIndex = todos.findIndex((el)=> el.id == todoId );
-    if(todoIndex == -1)
-        res.status(404).send("Not found any task with given id.");
-    else
-        res.json(todos[todoIndex]);
-    console.log("specific task using id");
-});
-
-
-//update
-
-router.put('/todos/:id', (req, res)=>{
-    const todoId = req.params.id;
-    const updatedtodo = req.body;
-
-    const todoIndex = todos.findIndex((el)=>{
-        return el.id == todoId;
+    //geting the data from the body
+    const todo = new Todos({
+        task : req.body.task,
+        priority : req.body.priority
     })
-    if(todoIndex == -1)
-        res.status(404).send("Not found any task with given id.");
-    else
+
+    try{
+        //saving the data, using save function (use await)
+        const savedData = await todo.save();
+        res.json(savedData);
+    }
+    catch(error)
     {
-        todos[todoIndex] = updatedtodo;
-        res.json(todos[todoIndex]);
+        console.log("Error: " + error);
+    }
+    
+});
+
+//get all todos -> find()
+router.get('/', async(req, res) => {
+
+    try {
+        
+        const fetchedData = await Todos.find();
+        res.json(fetchedData);
+
+    } catch (error) {
+        console.log("Error: " + error);
+    }
+    
+});
+
+//get todos with a specific id -> findById
+router.get('/:id', async(req, res) => {
+    try {
+        const fetchedData = await Todos.findById(req.params.id);
+
+        //if todo with id is not found
+        if(!fetchedData)
+        {
+            res.status(404).json(`Todo with id: ${req.params.id} is not found.`);
+        }
+        else
+        {   
+            res.json(fetchedData);
+        }
+    } catch (error) {
+        console.log("Error: " + error);
+    }
+});
+
+//updating a todo with specific id -> findByIdAndUpdate()
+router.put('/:id', async(req, res) => {
+
+    try {
+        
+        const updatedtodo = await Todos.findByIdAndUpdate(
+            //passing the id
+            req.params.id,
+            //passing the new data
+            req.body,
+            //giving new:true returns the updated value
+            {new: true}
+        );
+
+        //if todo with that id not found
+        if(!updatedtodo)
+        {
+            res.status(404).json(`Todo with id: ${req.params.id} not found.`)
+        }
+
+        else
+        {   
+            res.json(updatedtodo);
+        }
+
+    } catch (error) {
+        console.log("Error: " + error);
     }
 
-    console.log(`Task with id: ${todoId} updated successfully`);
+});
+
+//deleting a todo with specific id -> findByIdAndDelete
+router.delete('/:id', async(req, res) => {
+
+    try {
+
+        await Todos.findByIdAndDelete(
+            req.params.id
+        )
+        res.json({ message: 'Todo deleted' });
+        
+    } catch (error) {
+        console.log("Error: " + error);
+    }
+
 });
 
 
-//delete
-
-router.delete('/todos/:id', (req, res)=>{
-    const todoId = req.params.id;
-    const todoIndex = todos.findIndex((el)=> el.id == todoId );
-    if(todoIndex == -1)
-        res.status(404).send("Not found any task with given id.");
-    else
-    {
-        todos.splice(todoIndex, 1);
-        res.send(`Task with id: ${todoId} deleted successfullt.`);
-    }
-});
 
 export default router;
