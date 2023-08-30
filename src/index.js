@@ -2,6 +2,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import router from './routers/routes.js';
+import cors from 'cors';
 
 let todos = [];
 
@@ -28,6 +29,8 @@ const app = express();
 
 //express.json() middleware which parses and populates the json data of body to req.body
 app.use(express.json());
+
+app.use(cors());
 
 //routings
 

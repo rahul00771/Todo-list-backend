@@ -15,6 +15,7 @@ const todoSchema = new mongoose.Schema({
     }
 });
 
+//To create the collection 'Todos' with todosSchema
 const Todos = mongoose.model('Todos', todoSchema);
 
 export default Todos;
