@@ -2,9 +2,10 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import router from './routers/routes.js';
+import authRouter from './routers/auth.js';
 import cors from 'cors';
 
-let todos = [];
+// let todos = [];
 
 const PORT = 3000;
 
@@ -37,6 +38,8 @@ app.use(cors());
 //here '/todos' is the prefix endpoint, means /:id will be considered as /todos/:id
 app.use('/todos', router);
 
+//calling the auth router with base url '/'
+app.use('/', authRouter);
 
 //starting the server
 app.listen(PORT, ()=>{
