@@ -5,6 +5,7 @@ import users from "../model/User.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import {jwtSecret} from '../config/keys.js'
+import { json } from "stream/consumers";
 
 
   //controller for the register api
@@ -23,7 +24,10 @@ export  const register = async(req, res) => {
 
         //if user found then  400 res code
         if(existingUser){
-            return res.status(400).json({message: 'Account already exists.'})            
+
+            console.log("Account already exists")
+            return res.json(null);
+
         }
 
         //hashing the password using bcrypt with 10 as salt
@@ -42,7 +46,7 @@ export  const register = async(req, res) => {
         const token = jwt.sign({userId: newUser._id}, jwtSecret.jwtSecretKey);
 
         //sending the token to the client
-        res.json(token);
+        return res.json(token);
 
 
 
