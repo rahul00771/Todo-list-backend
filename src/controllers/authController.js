@@ -7,14 +7,19 @@ import jwt from 'jsonwebtoken';
 import {jwtSecret} from '../config/keys.js'
 
 
-  const register = async(req, res) => {
-
+  //controller for the register api
+export  const register = async(req, res) => {
       
       //check if there is already a user that exists with the email
-      try{
+      try{        
+
         //get the email and pass form the request body
         const {userMail, userPass} = req.body;
         const existingUser = await users.findOne({userMail});
+
+        //500error check(1nov)
+        // console.log("Entering the register Function", userMail, userPass);
+
 
         //if user found then  400 res code
         if(existingUser){
@@ -39,11 +44,52 @@ import {jwtSecret} from '../config/keys.js'
         //sending the token to the client
         res.json(token);
 
+
+
+        //1nov check for 500 error
+        // console.log("Exiting the register function")
+
     }
     catch(error){
         res.status(500).json({message: "Server error"});
     }
-
+    
+    
 }
 
-export default register;
+//controller for the login api
+// export const login = async(req, res) => {
+    
+//     //retrieving the userMail ans userPass from the request
+    
+//     try{
+        
+//         const {userMail, userPass} = req.body;
+//         //check if user is present or not
+//         const user = users.findOne({userMail});
+
+//         if(!user)
+//         {
+//             return res.status(401).json({message: 'User not found'});
+//         }
+
+//         //if user present then comparing the provided pass with hashed stored pass
+//         const passwordMatch = await bcrypt.compare(userPass, user.userPass);
+//         if (!passwordMatch) {
+//             return res.status(401).json({ message: 'Authentication failed' });
+//         }
+
+//         //if password is matched generate a jwt token
+//         const token = jwt.sign({userId: user._id}, jwtSecretKey);
+
+//         //sending the token to the client
+//         res.status(200).json({token});
+
+//     }
+//     catch(error){
+//         res.status(500).json({message: "Server error"});
+//     }
+
+
+
+
