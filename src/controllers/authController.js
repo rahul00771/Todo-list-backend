@@ -75,7 +75,8 @@ export const login = async(req, res) => {
         if(!user)
         {
             console.log("No user found")
-            return res.status(401).json({message: 'User not found'});
+            // return res.status(401).json({message: 'User not found'});
+            return res.json(null);
         }
 
         //if user present then comparing the provided pass with hashed stored pass
