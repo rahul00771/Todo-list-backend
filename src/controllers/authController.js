@@ -82,7 +82,8 @@ export const login = async(req, res) => {
         //if user present then comparing the provided pass with hashed stored pass
         const passwordMatch = await bcrypt.compare(userPass, user.userPass);
         if (!passwordMatch) {
-            return res.status(401).json({ message: 'Authentication failed' });
+            // return res.status(401).json({ message: 'Authentication failed' });
+            return res.json({"message": "authFailed"});
         }
 
         //if password is matched generate a jwt token
