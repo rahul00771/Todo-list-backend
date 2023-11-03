@@ -10,7 +10,8 @@ router.post('/', async (req, res) => {
     //geting the data from the body
     const todo = new Todos({
         task : req.body.task,
-        priority : req.body.priority
+        priority : req.body.priority,
+        userMail: req.body.userMail
     })
 
     try{
@@ -29,7 +30,7 @@ router.post('/', async (req, res) => {
 router.get('/', async(req, res) => {
 
     try {
-        
+                
         const fetchedData = await Todos.find();
         res.json(fetchedData);
 
@@ -39,15 +40,39 @@ router.get('/', async(req, res) => {
     
 });
 
+
 //get todos with a specific id -> findById
-router.get('/:id', async(req, res) => {
+// router.get('/:id', async(req, res) => {
+//     try {
+//         const fetchedData = await Todos.findById(req.params.id);
+
+//         //if todo with id is not found
+//         if(!fetchedData)
+//         {
+//             res.status(404).json(`Todo with id: ${req.params.id} is not found.`);
+//         }
+//         else
+//         {   
+//             res.json(fetchedData);
+//         }
+//     } catch (error) {
+//         console.log("Error: " + error);
+//     }
+// });
+
+
+//get todos with a specific userMail -> findById
+router.get('/:userMail', async(req, res) => {
     try {
-        const fetchedData = await Todos.findById(req.params.id);
+
+        console.log("Entered in getUSer", req.params.userMail);
+
+        const fetchedData = await Todos.find({userMail : req.params.userMail});
 
         //if todo with id is not found
         if(!fetchedData)
         {
-            res.status(404).json(`Todo with id: ${req.params.id} is not found.`);
+            res.status(404).json(`Todo with user: ${req.params.userMail} is not found.`);
         }
         else
         {   
@@ -57,7 +82,6 @@ router.get('/:id', async(req, res) => {
         console.log("Error: " + error);
     }
 });
-
 //updating a todo with specific id -> findByIdAndUpdate()
 router.put('/:id', async(req, res) => {
 

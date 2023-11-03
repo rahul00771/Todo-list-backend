@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const todoSchema = new mongoose.Schema({
+    
     task:{
         type: String,
         required: true
@@ -12,6 +13,10 @@ const todoSchema = new mongoose.Schema({
     isCompleted:{
         type: Boolean,
         default: false
+    },
+    userMail:{
+        type: String,
+        reuired:true
     }
 });
 

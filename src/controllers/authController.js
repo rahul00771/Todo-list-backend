@@ -90,7 +90,7 @@ export const login = async(req, res) => {
         const token = jwt.sign({userId: user._id}, jwtSecret.jwtSecretKey);
 
         //sending the token to the client
-        res.status(200).json({token});
+        res.status(200).json({token, userMail});
 
     }
     catch(error){
