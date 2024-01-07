@@ -4,8 +4,10 @@
 import users from "../model/User.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import {jwtSecret} from '../config/keys.js'
+// import {jwtSecret} from '../config/keys.js'
 import { json } from "stream/consumers";
+import dotenv from 'dotenv';
+dotenv.config();
 
 
   //controller for the register api
@@ -43,7 +45,9 @@ export  const register = async(req, res) => {
         await newUser.save();
 
         //generating th jwt for the user
-        const token = jwt.sign({userId: newUser._id}, jwtSecret.jwtSecretKey);
+        // const token = jwt.sign({userId: newUser._id}, jwtSecret.jwtSecretKey);
+
+        const token = jwt.sign({userId: newUser._id}, process.env.jwtSecretKey);
 
         //sending the token to the client
         return res.json(token);
@@ -83,11 +87,13 @@ export const login = async(req, res) => {
         const passwordMatch = await bcrypt.compare(userPass, user.userPass);
         if (!passwordMatch) {
             // return res.status(401).json({ message: 'Authentication failed' });
+
             return res.json({"message": "authFailed"});
         }
 
         //if password is matched generate a jwt token
-        const token = jwt.sign({userId: user._id}, jwtSecret.jwtSecretKey);
+        // const token = jwt.sign({userId: user._id}, jwtSecret.jwtSecretKey);
+        const token = jwt.sign({userId: user._id}, process.env.jwtSecretKey);
 
         //sending the token to the client
         res.status(200).json({token, userMail});
